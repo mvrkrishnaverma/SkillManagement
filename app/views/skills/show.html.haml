@@ -1,0 +1,30 @@
+%p#notice= notice
+
+.row
+  %b Name:
+  = @skill.name
+%br  
+.row
+  %b Description:
+  = @skill.description
+%br  
+%br  
+.row
+  %b Resources having skill : #{@skill.name}
+.row
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Employee ID 
+        %th Name
+        %th Email
+    %tbody
+    - @skill.users.each do |user|
+      %tr
+        %td= link_to( user.emp_id, profile_user_path(user))        
+        %td= link_to( user.name, profile_user_path(user))
+        %td= link_to(user.email, profile_user_path(user))
+%br
+.row    
+  = link_to 'Edit Skill Information', edit_skill_path(@skill), :class => "btn btn-primary"
+

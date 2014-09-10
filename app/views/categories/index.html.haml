@@ -1,0 +1,33 @@
+%h3 Categories List
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Description
+      %th Skills
+      %th
+      %th
+  %tbody
+  - @categories.each do |categorie|
+    %tr
+      %td= categorie.name
+      %td= categorie.description
+      %td= categorie.skills.count
+      %td
+        = link_to categorie do
+          %i.icon-eye-open
+          Show
+      %td
+        = link_to edit_category_path(categorie) do
+          %i.icon-pencil
+          Edit
+           
+      %td
+        = link_to categorie, :method => :delete, :data => { :confirm => 'Are you sure?' } do
+          %i.icon-trash
+          Delete
+
+%br
+
+= link_to 'New categorie', new_category_path, :class => "btn btn-primary"

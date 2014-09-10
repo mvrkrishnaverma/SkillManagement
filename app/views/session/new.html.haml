@@ -1,0 +1,15 @@
+
+%h3
+  Please login
+  
+%p
+  = form_tag(:action => :create) do 
+    .form-group
+      = label_tag "inputEmail", "Employee Id"
+      = text_field_tag :emp_id, "", :class => "form-control", :placeholder => "Ex: 361896", :id => "inputEmail"
+    .form-group
+      = label_tag "inputPassword", "Password"
+      = password_field_tag :password, "", :class=>"form-control", :id=>"inputPassword", :placeholder=>"Password"
+    .form-group
+      = submit_tag "Login", :class => "btn btn-primary"
+  

@@ -1,0 +1,195 @@
+.span7
+  .row
+    .span3
+      .h2
+        %b Profile Information
+  %br
+  %br 
+  .row
+    .span1
+      %i
+        Contact   
+    .span2
+      %b
+        Alias
+    .span4.text-primary
+      = @user_details[:samaccountname]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        E-mail
+    .span4     
+      = @user_details[:mail]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Office
+    .span4     
+      = @user_details[:physicaldeliveryofficename] 
+  
+  %br
+  %br    
+  .row
+    .span1
+      %i
+        Information   
+    .span2
+      %b
+        Job title
+    .span4.text-primary
+      = @user_details[:title]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Department
+    .span4     
+      = @user_details[:department]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Company
+    .span4     
+      = @user_details[:company]   
+      
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Manager
+    .span4   
+      - name = @user_details[:manager].split(",")[0].split("=")[1] if !@user_details[:manager].blank?
+      = name
+      =# link_to name, profile_user_path(:view => name)
+  
+  %br
+  %br
+  .row
+    .span4
+      %i
+        Address (Mailing Address)
+  .row
+    .span1
+      %br        
+    .span2
+      %b
+        Street
+    .span4.text-primary{:style=>"overflow:hidden;"}
+      = @user_details[:streetaddress]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        City
+    .span4     
+      = @user_details[:l]
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        State/Province
+    .span4     
+      = @user_details[:st]   
+      
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Postal code
+    .span4     
+      = @user_details[:postalcode]
+  
+  .row
+    .span1
+      %br
+    .span2
+      %b
+        Country/Region
+    .span4     
+      = @user_details[:co]
+.span4
+  .row
+    .span3
+      .h2
+        %b 
+          Expected Proficiency
+
+.span4
+  .row
+    .span3
+      .h2
+        %b.skill-level-1 
+          1- No working knowledge
+.span4
+  .row
+    .span3
+      .h2
+        %b.skill-level-2
+          2 -Worked, but not extensively
+.span4
+  .row
+    .span3
+      .h2
+        %b.skill-level-3
+          3 - Have working knowledge  
+.span4
+  .row
+    .span3
+      .h2
+        %b.skill-level-4
+          4 - Extensive Working Knowledge
+
+  .row
+    .span3
+      .h2
+        %b.skill-level-5
+          5 - Expert/Specialist
+  %br
+  %br
+  
+.span4
+  .row
+    .span3
+      .h2
+        %b 
+          Skills
+          - if !@user.skillset_last_updated_on.empty?
+            = "( Last updated on : #{@user.skillset_last_updated_on} )"
+     
+  .row      
+    .span3
+      - if @user.skills.empty?
+        No skills added to this profile. Click on 
+        %b
+          Update Skills
+        link to update skill set.
+      - else 
+        %ul.nav.nav-pills
+          - @user.skills.each  do |skill|
+            %li.active
+              = link_to("#{skill.name}", role_based_skill_path(skill), :class => "skill-level-#{@user.skill_level(skill).level}")
+  %br
+  %br
+  - if @user_details.has_key?(:directreports)
+    =# @user_details[:directreports].inspect
+  - else
+    =# "dont have any reporties #{@user_details[:title]}"
+  =# @user_details.inspect
+  - if is_user_profile?(@user)
+    = link_to "Update Skills", skills_user_path(@user.id), :class => "btn btn-default"
+    
+
+
+          
+    

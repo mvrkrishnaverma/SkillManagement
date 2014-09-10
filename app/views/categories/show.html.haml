@@ -1,0 +1,35 @@
+%p#notice= notice
+
+.row
+  %b Name:
+  = @category.name
+%br
+.row
+  %b Description:
+  = @category.description
+%br
+%br
+
+- @category.skills.each  do |skill|
+  - if skill.users.size != 0
+    .row
+      Resources with skill:
+      %b
+        = skill.name
+      %table.table.table-striped
+        %thead
+          %tr
+            %th Employee ID            
+            %th Name
+            %th Email
+        %tbody
+        - skill.users.each do |user|
+          %tr
+            %td= link_to( user.emp_id, profile_user_path(user))
+            %td= link_to( user.name, profile_user_path(user))
+            %td= link_to(user.email, profile_user_path(user))
+
+
+.row
+  = link_to 'Edit category Information', edit_category_path(@category), :class => "btn btn-primary"
+

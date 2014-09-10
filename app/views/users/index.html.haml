@@ -1,0 +1,86 @@
+.row
+  .span4
+    %h3 Listing users
+  .span6.pull-right
+    .span4
+      .row
+        .span3
+          .h2
+            %b.skill-level-1
+              1 - No working knowledge
+    .span4
+      .row
+        .span3
+          .h2
+            %b.skill-level-2
+              2 - Worked, but not extensively
+    .span4
+      .row
+        .span3
+          .h2
+            %b.skill-level-3
+              3 - Have working knowledge  
+    .span4
+      .row
+        .span3
+          .h2
+            %b.skill-level-4
+              4 - Extensive Working Knowledge
+    
+      .row
+        .span3
+          .h2
+            %b.skill-level-5
+              5 - Expert/Specialist  
+%br
+%br
+  
+%div
+  = form_tag(:action => :search ) do
+    .form-group
+      = text_field_tag :search, "", :placeholder => "HTML, CSS ...."
+    .form-group  
+      = button_tag :class => "btn btn-primary"  do
+        %i.icon-search
+          Search
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name(Emp ID)
+      %th.span7 Skills
+      %th Last updated
+      %th
+  %tbody
+  - @users.each do |user|
+    %tr
+      %td= link_to "#{user.name} (#{user.emp_id})", profile_user_path(user)
+      %td
+        %ul.nav.nav-pills
+          - user.skills.each_with_index do |skill,i|
+            - if i == 14 then
+              - break
+            %li.active{:style => "padding-bottom:2px;padding-top:2px;"}
+              = link_to("#{skill.name}", skill_path(skill.id), :style => "line-height: 7px;",:class => "skill-level-#{user.skill_level(skill).level}")
+      %td= user.skillset_last_updated_on
+      %td
+        = link_to profile_user_path(user) do
+          %i.icon-eye-open
+          Show
+      %td
+        = link_to edit_user_path(user) do
+          %i.icon-pencil
+          Edit
+          
+
+      %td
+        = link_to user, :method => :delete, :data => { :confirm => 'Are you sure?' } do
+          %i.icon-trash
+          Delete
+      %td
+        = link_to skills_user_path(user) do
+          %i.icon-plus
+          Update Skills
+
+%br
+
+=# link_to 'New User', new_user_path

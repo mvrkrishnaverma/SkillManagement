@@ -1,0 +1,18 @@
+= form_for @skill do |f|
+  - if @skill.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@skill.errors.count, "error")} prohibited this skill from being saved:"
+      %ul
+        - @skill.errors.full_messages.each do |msg|
+          %li= msg
+  .form-group
+    = f.label :Category
+    = f.select("category_id", Category.all.collect {|p| [ p.name, p.id ] })
+  .form-group
+    = f.label :name
+    = f.text_field :name, :class => "form-control", :placeholder => "Name"
+  .form-group
+    = f.label :description
+    = f.text_area :description, :class => "form-control", :placeholder => "Description", :rows => 6, :cols => 60
+  .form-group
+    = f.submit 'Save', :class => "btn btn-primary"

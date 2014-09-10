@@ -1,0 +1,35 @@
+%p#notice= notice
+
+.row
+  .span1.text-right
+    %b
+      Name :
+  .span3  
+    = @user.name
+.row
+  .span1.text-right
+    %b
+      Email :
+  .span3  
+    = @user.email
+    
+        
+.row
+  .span1.text-right
+    %b
+      Skills :
+  .span8
+    %ul.nav.nav-pills
+      - @user.skills.each  do |skill|
+        %li.active
+          = link_to("#{skill.name}(#{@user.skill_level(skill)})")
+  
+
+
+ 
+
+= link_to 'Edit', edit_user_path(@user), :class => "btn btn-primary"
+\|
+= link_to 'Back', users_path
+\|
+= link_to 'Add Skills', skills_user_path(@user)

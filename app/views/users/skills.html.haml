@@ -1,0 +1,135 @@
+- content_for :content_tab do      
+  - Category.all.each_with_index do |category,i|
+    %li
+      %a{:href => "#section#{i}"}
+        = category.name
+          
+- content_for :more_tab do           
+  - Category.all.each_with_index do |category,i|
+    - if ![0,1,2,3].include?(i)
+      %li
+        %a{:href => "#section#{i}"}
+          = category.name
+              
+              
+%p#notice= notice
+%p
+  %h3 Profile Info
+%br
+ 
+%p
+  %b Name:
+  = @user.name
+%p
+  %b Email:
+  = @user.email
+%p
+  %b Skill last updated on:
+  = @user.skillset_last_updated_on  
+%br  
+  = form_for @skill_set, :url => add_skills_user_path(@user) do |f|
+    %h3 
+      Update skills
+    .row.top-bottom-buffer
+      .span11.text-right
+        %b
+          Levels : 
+          %i.skill-level-1
+            1- No working knowledge
+          |   
+          %i.skill-level-2
+            2 -Worked, but not extensively
+          |          
+          %i.skill-level-3
+            3 - Have working knowledge
+          |   
+          %i.skill-level-4
+            4 - Extensive Working Knowledge
+          |  
+          %i.skill-level-5
+            5 - Expert/Specialist  
+                    
+    .tabbable.tabs-left
+      %ul.nav.nav-tabs{:id => "myTab" }
+        = yield(:content_tab)
+
+          
+    
+
+ 
+
+
+      .tab-content
+        - Category.all.each_with_index do |category,i|
+          .tab-pane.fade{:id => "section#{i}"}
+            - category.skills.each do |skill|
+              .row.form-group
+                - has_skill, skill_level = user_has_skill(@user,skill)
+                .span2
+                  = check_box_tag "skill_ids[]", skill.id, has_skill ? true : false , {:id=> "skillcheck_#{skill.id}", :class => "skill_check_box"}
+                  - if has_skill
+                    %span{:class => "skill-level-#{skill_level.level}"}
+                      %b
+                        = skill.name
+                  - else
+                    = skill.name
+                .span2 
+                  = check_box_tag "level_ids[]", has_skill ? skill_level.level : 1, has_skill ? true : false, :id => "level_#{skill.id}", :style=>"display:none" 
+                  = select_tag( 'level[]',options_for_select([['1- No working knowledge', 1 ],['2 -Worked, but not extensively', 2 ],['3 - Have working knowledge', 3 ],['4 - Extensive Working Knowledge', 4 ], ['5 - Expert/Specialist', 5 ]], has_skill ? skill_level.level.to_s : ''), :id => "skill_#{skill.id}", :style => "width:150px;",:class => "skill_level")
+                .span2
+                  = has_skill ? "Last updated on : #{skill_level.created_at.strftime('%m/%d/%y')}" : ''
+    %br 
+    .row
+      .span7.text-right
+        = f.hidden_field :user_id, :value => @user.id
+        = f.submit 'Update Skills', :class => "btn btn-primary"
+      .span1  
+        = link_to "Cancel", profile_user_path(@user.id), :class => "btn btn-primary"
+
+
+:javascript
+  $(document).ready(function(){ 
+      var skill_level = new Array;
+      $("#myTab a").click(function(e){
+        e.preventDefault();
+        $(this).tab('show');
+      });
+      $("#myTab li").first().addClass( "active" );
+      $("#section0").addClass("in active");
+      
+      $(".skill_check_box").change(function(e){
+        var level_id = this.id.split('_')[1];
+        
+        if($("#skillcheck_"+level_id).is(':checked'))
+        {      
+          $("#level_"+level_id).val($("#skill_"+level_id).val());
+          $("#level_"+level_id).attr('checked', true);
+        }
+        else
+        {
+          $("#level_"+level_id).val(1);
+          $("#level_"+level_id).attr('checked', false);
+        }
+      
+      });
+      
+      $(".skill_level").change(function(e){
+        var level_id = this.id.split('_')[1];      
+        if($("#skillcheck_"+level_id).is(':checked'))
+          {
+            var level_value = this.value;
+            $("#level_"+level_id).val(level_value);
+            $("#level_"+level_id).attr('checked', true);
+          }
+      });
+      
+
+      
+  });
+:css
+  h3{
+    padding: 0 10px;
+    margin-top: 20px;
+    background: #F2F2F2;
+  }
+  .top-bottom-buffer { margin-top:20px; margin-bottom:20px; }  

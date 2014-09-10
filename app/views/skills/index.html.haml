@@ -1,0 +1,33 @@
+%h3 Skills list
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Description
+      %th Category
+      %th Users
+      %th
+  %tbody
+  - @skills.each do |skill|
+    %tr
+      %td= skill.name
+      %td= truncate(skill.description, :length => 100, :separator => ' ')
+      %td= skill.category.name
+      %td= skill.users.count
+      %td
+        = link_to skill do
+          %i.icon-eye-open
+          Show
+      %td
+        = link_to edit_skill_path(skill) do
+          %i.icon-pencil
+          Edit
+      %td
+        = link_to skill, :method => :delete, :data => { :confirm => 'Are you sure?' } do
+          %i.icon-trash
+          Delete
+
+%br
+
+= link_to 'New Skill', new_skill_path, :class => "btn btn-primary"

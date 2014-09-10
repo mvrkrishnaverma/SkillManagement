@@ -1,0 +1,65 @@
+.row
+  .span12.text-center
+    %h3 Welcome to Skill Management System 
+%br
+%br    
+.row
+  .span4  
+    %h4
+      Search users with similar skills : 
+  .span6    
+    = form_tag(:action => :user_search ) do
+      .row
+        .span3
+          .form-group
+            = text_field_tag :search, params[:search], :placeholder => "HTML, CSS ...."
+        .span3    
+          .form-group  
+            = button_tag :class => "btn btn-primary"  do
+              %i.icon-search
+                Search
+%br 
+.row
+  .span3.text-left
+    %h4 List of users with skills :
+  .span4.text-left
+    %ul.nav.nav-pills
+      - if params[:action] == 'dashboard'
+        - @user.skills.each do |skill|
+          %li.active{:style => "padding-bottom:2px;padding-top:2px;"}
+            = link_to("#{skill.name}", similar_skill_user_path(:skill => skill.id), :style => "line-height: 7px;",:class => "skill-level-#{@user.skill_level(skill).level}")       
+      - elsif !params[:skill].blank?         
+        %li.active{:style => "padding-bottom:2px;padding-top:2px;"}
+          = link_to("#{@skill.name}", similar_skill_user_path(:skill => @skill.id), :style => "line-height: 7px;",:class => "skill-level-#{@user.skill_level(@skill).level}")        
+   
+- if @users.blank?
+  .row
+    .span6.text-left
+      - if params[:action] == 'dashboard'
+        You have not updated any skills to your profile.
+      - else
+        No results found for your search.   
+       
+- else    
+  %table.table.table-striped
+    %thead
+      %tr
+        %th.span3 Name(Emp ID)
+        %th.span9 Skills
+        %th Last updated
+        %th
+    %tbody
+    - @users.each do |user|
+      %tr
+        %td= link_to "#{user.name} (#{user.emp_id})", profile_user_path(user)
+        %td
+          %ul.nav.nav-pills
+            - user.skills.each_with_index do |skill,i|
+              - if i == 14 then
+                - break
+              %li.active{:style => "padding-bottom:2px;padding-top:2px;"}
+                = link_to("#{skill.name}", '#', :style => "line-height: 7px;",:class => "skill-level-#{user.skill_level(skill).level}")
+        %td= user.skillset_last_updated_on
+
+
+%br                
